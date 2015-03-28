@@ -1,0 +1,22 @@
+{
+  "name": "Gauge",
+  "version": "1.0.0",
+  "description": "Some gauge.",
+  "main": "gauge.js",
+  "scripts": {
+    "test": "console,log('test')"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/keske/Gauge.git"
+  },
+  "keywords": [
+    "JS"
+  ],
+  "author": "Andrey Keske",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/keske/Gauge/issues"
+  },
+  "homepage": "https://github.com/keske/Gauge"
+}
