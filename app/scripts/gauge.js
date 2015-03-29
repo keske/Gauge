@@ -2,10 +2,40 @@
 
 $.fn.gauge = (function() {
 
+  var // Canvas size
+    DEFAULT_CANVAS_WIDTH = 580,
+    DEFAULT_CANVAS_HEIGHT = 250,
+
+    // Values
+    DEFAULT_MIN = 0,
+    DEFAULT_VALUE = 50,
+    DEFAULT_MAX = 1000,
+
+    // Arc
+    DEFAULT_RADIUS = 75,
+    DEFAULT_ANGLE_START = 0.7,
+    DEFAULT_ANGLE_END = 0.7,
+    DEFAULT_LINE_WIDTH = 2,
+    DEFAULT_SECTORS = [{
+      'limitTo': 1.9,
+      'color': '#666666'
+    }, {
+      'limitTo': 2.2,
+      'color': '#ffa500'
+    }, {
+      'limitTo': 2.3,
+      'color': '#ff0000'
+    }],
+
+    // Arrow
+    DEFAULT_ARROW_WIDTH = 3,
+    DEFAULT_ARROW_COLOR = '#1e98e4',
+    DEFAULT_ARROW_CIRCLE_RADIUS = 7;
+
   var draw = function($elem) {
 
     var _createCanvas = function() {
-      $('.gauge').html('<canvas id="myCanvas" width="578" height="250"></canvas>')
+      $('.gauge').html('<canvas id="myCanvas" width="' + DEFAULT_CANVAS_WIDTH + '" height="' + DEFAULT_CANVAS_HEIGHT + '"></canvas>')
     };
 
     var _getAttr = function(attribute) {
@@ -17,22 +47,24 @@ $.fn.gauge = (function() {
         canvas = document.getElementById('myCanvas'),
         context = canvas.getContext('2d'),
 
+        // Position
         x = canvas.width / 2,
         y = canvas.height / 2,
 
-        radius = _getAttr('radius'),
+        // Get radius. Default: 75
+        radius = _getAttr('radius') || DEFAULT_RADIUS,
 
-        startAngle = +_getAttr('startAngle') * Math.PI || (0.7 * Math.PI),
-        endAngle = +_getAttr('endAngle') * Math.PI || (2.3 * Math.PI),
+        startAngle = (+_getAttr('startAngle') || DEFAULT_ANGLE_START) * Math.PI,
+        endAngle = (+_getAttr('endAngle') || DEFAULT_ANGLE_END) * Math.PI,
 
         counterClockwise = false,
 
-        // Atribute params to JSON
-        sectors = eval(_getAttr('sectors'));
+        // Atribute params to JSON. Default: `DEFAULT_SECTORS`
+        sectors = eval(_getAttr('sectors')) || DEFAULT_SECTORS;
 
       // Draw arc
-      // Set line width. Default: 15
-      context.lineWidth = _getAttr('lineWidth') || 15;
+      // Set line width. Default: `DEFAULT_LINE_WIDTH`
+      context.lineWidth = _getAttr('lineWidth') || DEFAULT_LINE_WIDTH;
 
       // First sector
       context.beginPath();
@@ -62,35 +94,38 @@ $.fn.gauge = (function() {
         canvas = document.getElementById('myCanvas'),
         context = canvas.getContext('2d'),
 
-        // Get arrow width from attribute. Default: 10
-        arrowWidth = _getAttr('arrow-width') || 10,
-        
-        // Get arrow width from attribute. Default: black
-        arrowColor = _getAttr('arrow-color') || 10,
-        
-        // Get radius
-        radius = _getAttr('radius'),
-        
+        // Get arrow width from attribute. Default: `DEFAULT_ARROW_WIDTH`
+        arrowWidth = _getAttr('arrow-width') || DEFAULT_ARROW_WIDTH,
+
+        // Get arrow width from attribute. Default: `DEFAULT_ARROW_COLOR`
+        arrowColor = _getAttr('arrow-color') || DEFAULT_ARROW_COLOR,
+
+        // Get radius. Default: `DEFAULT_RADIUS`
+        radius = _getAttr('radius') || DEFAULT_RADIUS,
+
+        // Circle radius. Default: `DEFAULT_ARROW_CIRCLE_RADIUS`
+        circleRadius = _getAttr('arrow-circle-radius') || DEFAULT_ARROW_CIRCLE_RADIUS,
+
         // Current position
         angle = 0,
-        
-        // Arrow start angle
-        arrowStartAngle = +_getAttr('startAngle'),
-        
-        // Arrow limit/end angle
-        arrowEndAngle = +_getAttr('endAngle'),
-        
-        // Current value
-        value = +_getAttr('value'),
-        
-        // Maximum value
-        max = +_getAttr('max'),
-        
+
+        // Arrow start angle. Default: `DEFAULT_ANGLE_START`
+        arrowStartAngle = +_getAttr('startAngle') || DEFAULT_ANGLE_START,
+
+        // Arrow limit/end angle. Default: `DEFAULT_ANGLE_END`
+        arrowEndAngle = +_getAttr('endAngle') || DEFAULT_ANGLE_END,
+
+        // Current value. Default: `DEFAULT_VALUE`
+        value = +_getAttr('value') || DEFAULT_VALUE,
+
+        // Maximum value. Default: `DEFAULT_MAX`
+        max = +_getAttr('max') || DEFAULT_MAX,
+
         // Fix arrow position
         multiplier = 0,
-        
+
         // Step for fixing position
-        multiplierStep = 5,
+        multiplierStep = 0,
 
         newValue = 0;
 
@@ -98,11 +133,11 @@ $.fn.gauge = (function() {
 
       // Fix position...
       // Yeah, it's looks not cool, for MVP it's ok
-      if (value < 49) {
+      if (value < (max / 2) - 1) {
         value = value + (multiplierStep * multiplier);
-      } else if (value > 51) {
+      } else if (value > (max / 2) + 1) {
         value = value - (multiplierStep * multiplier);
-      } else if (value === 50) {
+      } else if (value === max / 2) {
         value = +_getAttr('value');
       }
 
@@ -130,6 +165,12 @@ $.fn.gauge = (function() {
       context.fill();
       context.closePath();
       context.restore();
+
+      // Create circle
+      context.beginPath();
+      context.arc(canvas.width / 2, canvas.height / 2, circleRadius, 0, 2 * Math.PI, false);
+      context.fillStyle = arrowColor;
+      context.fill();
     };
 
     _createCanvas();
