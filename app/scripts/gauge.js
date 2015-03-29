@@ -57,24 +57,6 @@ $.fn.gauge = (function() {
       return (Math.PI / 180) * degrees
     }
 
-    function drawHand(ctx, canvas, length, angle, arrowWidth) {
-      ctx.save();
-      ctx.beginPath();
-      ctx.translate(canvas.width / 2, canvas.height / 2);
-      ctx.rotate(-180 * Math.PI / 180); // Correct for top left origin
-      ctx.rotate(angle * Math.PI / 180);
-      ctx.moveTo(-10, 0);
-      ctx.lineTo(0, length);
-      ctx.lineTo(10, 0);
-      ctx.lineTo(-10, 0);
-      // ctx.moveTo(canvas.width / 2 - +arrowWidth, canvas.height / 2);
-      // ctx.lineTo(canvas.width / 2, 100);
-      // ctx.lineTo(canvas.width / 2 + +arrowWidth, canvas.height / 2);
-      // ctx.stroke();
-      ctx.fill();
-      ctx.closePath();
-      ctx.restore();
-    }
 
     var _drawArrow = function() {
       var
@@ -83,21 +65,32 @@ $.fn.gauge = (function() {
         // Get arrow width from attribute. Default: 10
         arrowWidth = _getAttr('arrow-width') || 10,
         // Get arrow width from attribute. Default: black
-        arrowColor = _getAttr('arrow-color') || 10;
+        arrowColor = _getAttr('arrow-color') || 10,
+        // Get radius
+        radius = _getAttr('radius'),
+        // Current position
+        angle = 0;
 
-      var seconds = -84;
-      context.strokeStyle = "red";
-      context.lineWidth = 1;
-      drawHand(context, canvas, 75, -145, arrowWidth);
+      // Set fill color
+      context.fillStyle = arrowColor;
 
-      // context.fillStyle = arrowColor;
-      // context.beginPath();
-      // context.moveTo(canvas.width / 2 - +arrowWidth, canvas.height / 2);
-      // context.lineTo(canvas.width / 2, 100);
-      // context.lineTo(canvas.width / 2 + +arrowWidth, canvas.height / 2);
-      // context.closePath();
-      // context.fill();
-      // context.restore();
+      context.save();
+      context.beginPath();
+      context.translate(canvas.width / 2, canvas.height / 2);
+
+      // Rotate
+      context.rotate(-180 * Math.PI / 180);
+      context.rotate(angle * Math.PI / 180);
+      
+      // Draw figure
+      context.moveTo(0 - arrowWidth, 0);
+      context.lineTo(0, radius);
+      context.lineTo(0 + arrowWidth, 0);
+      context.lineTo(0 - arrowWidth, 0);
+
+      context.fill();
+      context.closePath();
+      context.restore();
     };
 
     var
