@@ -61,14 +61,55 @@ $.fn.gauge = (function() {
       var
         canvas = document.getElementById('myCanvas'),
         context = canvas.getContext('2d'),
+
         // Get arrow width from attribute. Default: 10
         arrowWidth = _getAttr('arrow-width') || 10,
+        
         // Get arrow width from attribute. Default: black
         arrowColor = _getAttr('arrow-color') || 10,
+        
         // Get radius
         radius = _getAttr('radius'),
+        
         // Current position
-        angle = 0;
+        angle = 0,
+        
+        // Arrow start angle
+        arrowStartAngle = +_getAttr('startAngle'),
+        
+        // Arrow limit/end angle
+        arrowEndAngle = +_getAttr('endAngle'),
+        
+        // Current value
+        value = +_getAttr('value'),
+        
+        // Maximum value
+        max = +_getAttr('max'),
+        
+        // Fix arrow position
+        multiplier = 0,
+        
+        // Step for fixing position
+        multiplierStep = 5,
+
+        newValue = 0;
+
+      multiplier = (parseFloat(_getAttr('startAngle')).toFixed(2) * 10) - 5;
+
+      // Fix position...
+      // Yeah, it's looks not cool, for MVP it's ok
+      if (value < 49) {
+        value = value + (multiplierStep * multiplier);
+      } else if (value > 51) {
+        value = value - (multiplierStep * multiplier);
+      } else if (value === 50) {
+        value = +_getAttr('value');
+      }
+
+      // Data for rendering
+      newValue = max / value;
+      step = (arrowEndAngle / max) + arrowStartAngle;
+      angle = 2 / newValue;
 
       // Set fill color
       context.fillStyle = arrowColor;
@@ -77,62 +118,8 @@ $.fn.gauge = (function() {
       context.beginPath();
       context.translate(canvas.width / 2, canvas.height / 2);
 
-      // -3.141592653589793
-
-      // Rotate
-      // context.rotate(-180 * Math.PI / 100);
-      // context.rotate(0.65);
-      // context.rotate(5);
-
-      var
-        arrowStartAngle = +_getAttr('startAngle'), // - 0.5,
-        arrowEndAngle = +_getAttr('endAngle'), // - 0.5,
-        value = +_getAttr('value'),
-        // min = _getAttr('min'),
-        max = +_getAttr('max');
-      // step = _getAttr('step') || 1;
-
-      // d = 5
-      // 0.5
-      var multiplier = 0,
-        multiplierStep = 5;
-
-      multiplier = parseFloat(_getAttr('startAngle')).toFixed(2);
-      multiplier = multiplier * 10;
-      multiplier = multiplier - 5;
-
-      if (value < 49) {
-        value = value + (5 * multiplier);
-      } else if (value > 51) {
-        value = value - (5 * multiplier);
-      } else if (value === 50) {
-        value = +_getAttr('value');
-      }
-      var newValue = max / value;
-      console.log('newValue: ' + newValue)
-
-      // var step = 0;
-
-      step = (arrowEndAngle / max) + arrowStartAngle;
-      // angle = step * 50;
-      angle = 2 / newValue;
-
-      // console.log('step: ' + step);
-      // console.log('value: ' + value);
-      // console.log('max: ' + max);
-      // console.log('(step * value): ' + (step * value))
-      console.log('angle: ' + angle)
-
       // Rotate arrow
-      // context.rotate(arrowStartAngle * Math.PI);
       context.rotate(angle * Math.PI);
-
-      // context.rotate(1.8 * Math.PI);
-
-      // context.rotate(angle * Math.PI / 180);
-
-      // console.log(-180 * Math.PI / 180);
-      // console.log(angle * Math.PI / 180);
 
       // Draw figure
       context.moveTo(0 - arrowWidth, 0);
