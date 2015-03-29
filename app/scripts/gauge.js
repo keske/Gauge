@@ -1,13 +1,14 @@
 /* jshint devel:true */
 
 $.fn.gauge = (function() {
+  'use strict';
 
   var // Canvas size
     DEFAULT_CANVAS_WIDTH = 580,
     DEFAULT_CANVAS_HEIGHT = 250,
 
     // Values
-    DEFAULT_MIN = 0,
+    // DEFAULT_MIN = 0,
     DEFAULT_VALUE = 50,
     DEFAULT_MAX = 1000,
 
@@ -35,7 +36,7 @@ $.fn.gauge = (function() {
   var draw = function($elem) {
 
     var _createCanvas = function() {
-      $('.gauge').html('<canvas id="myCanvas" width="' + DEFAULT_CANVAS_WIDTH + '" height="' + DEFAULT_CANVAS_HEIGHT + '"></canvas>')
+      $('.gauge').html('<canvas id="myCanvas" width="' + DEFAULT_CANVAS_WIDTH + '" height="' + DEFAULT_CANVAS_HEIGHT + '"></canvas>');
     };
 
     var _getAttr = function(attribute) {
@@ -80,13 +81,9 @@ $.fn.gauge = (function() {
 
       // Third sector
       context.beginPath();
-      context.arc(x, y, radius, sectors[1].limitTo * Math.PI, sectors[2].limitTo * Math.PI, counterClockwise);
+      context.arc(x, y, radius, sectors[1].limitTo * Math.PI, endAngle, counterClockwise);
       context.strokeStyle = sectors[2].color;
       context.stroke();
-    };
-
-    function degreesToRadians(degrees) {
-      return (Math.PI / 180) * degrees
     };
 
     var _drawArrow = function() {
@@ -120,6 +117,7 @@ $.fn.gauge = (function() {
 
         // Maximum value. Default: `DEFAULT_MAX`
         max = +_getAttr('max') || DEFAULT_MAX,
+        step = 0,
 
         // Fix arrow position
         multiplier = 0,
@@ -173,10 +171,76 @@ $.fn.gauge = (function() {
       context.fill();
     };
 
+    var _degToRad = function(degrees) {
+      return degrees * (Math.PI / 180);
+    }
+
+    var _drawFace = function() {
+      var
+        canvas = document.getElementById('myCanvas'),
+        context = canvas.getContext('2d'),
+
+        // Tick inner or outter style
+        tickInner = _getAttr('tick-inner'),
+        // Tick size
+        tickSize = _getAttr('tick-size'),
+        // Color
+        tickColor = _getAttr('tick-color'),
+        // Radius
+        radius = _getAttr('radius'),
+
+        tickValue = 0,
+        tickRadius = 0,
+
+        //
+        onArchX = 0,
+        onArchY = 0,
+        innerTickX = 0,
+        innerTickY = 0,
+
+        tickStartX = 0,
+        tickStartY = 0,
+
+        tickEndX = 0,
+        tickEndY = 0;
+
+      // TODO: inner and outer style
+      // now not working...
+      if (tickInner) {
+        tickValue = radius - 10;
+      } else {
+        tickValue = radius + 10;
+      }
+
+      for (var i = -55; i < 235; i += 48) {
+        tickRadius = _degToRad(i);
+
+        onArchX = 75 - (Math.cos(tickRadius) * tickValue);
+        onArchY = 75 - (Math.sin(tickRadius) * tickValue);
+
+        innerTickX = 75 - (Math.cos(tickRadius) * 75);
+        innerTickY = 75 - (Math.sin(tickRadius) * 75);
+
+        tickStartX = (canvas.width / 2 - 75) + onArchX;
+        tickStartY = (canvas.height / 2 - 75) + onArchY;
+
+        tickEndX = (canvas.width / 2 - 75) + innerTickX;
+        tickEndY = (canvas.height / 2 - 75) + innerTickY;
+
+        context.beginPath();
+        context.strokeStyle = tickColor;
+        context.moveTo(tickStartX, tickStartY);
+        context.lineTo(tickEndX, tickEndY);
+        context.stroke();
+        context.closePath();
+      }
+    };
+
     _createCanvas();
     _drawArc();
     _drawArrow();
-  }
+    _drawFace();
+  };
 
   $(window).load(function() {
     $('.gauge').each(function() {
