@@ -55,8 +55,7 @@ $.fn.gauge = (function() {
 
     function degreesToRadians(degrees) {
       return (Math.PI / 180) * degrees
-    }
-
+    };
 
     var _drawArrow = function() {
       var
@@ -78,10 +77,63 @@ $.fn.gauge = (function() {
       context.beginPath();
       context.translate(canvas.width / 2, canvas.height / 2);
 
+      // -3.141592653589793
+
       // Rotate
-      context.rotate(-180 * Math.PI / 180);
-      context.rotate(angle * Math.PI / 180);
-      
+      // context.rotate(-180 * Math.PI / 100);
+      // context.rotate(0.65);
+      // context.rotate(5);
+
+      var
+        arrowStartAngle = +_getAttr('startAngle'), // - 0.5,
+        arrowEndAngle = +_getAttr('endAngle'), // - 0.5,
+        value = +_getAttr('value'),
+        // min = _getAttr('min'),
+        max = +_getAttr('max');
+      // step = _getAttr('step') || 1;
+
+      // d = 5
+      // 0.5
+      var multiplier = 0,
+        multiplierStep = 5;
+
+      multiplier = parseFloat(_getAttr('startAngle')).toFixed(2);
+      multiplier = multiplier * 10;
+      multiplier = multiplier - 5;
+
+      if (value < 49) {
+        value = value + (5 * multiplier);
+      } else if (value > 51) {
+        value = value - (5 * multiplier);
+      } else if (value === 50) {
+        value = +_getAttr('value');
+      }
+      var newValue = max / value;
+      console.log('newValue: ' + newValue)
+
+      // var step = 0;
+
+      step = (arrowEndAngle / max) + arrowStartAngle;
+      // angle = step * 50;
+      angle = 2 / newValue;
+
+      // console.log('step: ' + step);
+      // console.log('value: ' + value);
+      // console.log('max: ' + max);
+      // console.log('(step * value): ' + (step * value))
+      console.log('angle: ' + angle)
+
+      // Rotate arrow
+      // context.rotate(arrowStartAngle * Math.PI);
+      context.rotate(angle * Math.PI);
+
+      // context.rotate(1.8 * Math.PI);
+
+      // context.rotate(angle * Math.PI / 180);
+
+      // console.log(-180 * Math.PI / 180);
+      // console.log(angle * Math.PI / 180);
+
       // Draw figure
       context.moveTo(0 - arrowWidth, 0);
       context.lineTo(0, radius);
@@ -92,12 +144,6 @@ $.fn.gauge = (function() {
       context.closePath();
       context.restore();
     };
-
-    var
-      value = _getAttr('value'),
-      min = _getAttr('min'),
-      max = _getAttr('max'),
-      step = _getAttr('step') || 1;
 
     _createCanvas();
     _drawArc();
