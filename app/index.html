@@ -28,18 +28,23 @@
     gauge-max="100" 
     gauge-step="10" 
     gauge-radius="75" 
-    gauge-lineWidth="5" 
+    gauge-lineWidth="2" 
     gauge-startAngle="0.7" 
     gauge-endAngle="2.3" 
     gauge-sectors="[
         {
-            'limitTo': 10,
+            'limitTo': 1.9,
+            'color': 'black'
+        }, {
+            'limitTo': 2.2,
             'color': 'red'
         }, {
-            'limitTo': 40,
-            'color': 'red'
-        }, 
+            'limitTo': 2.3,
+            'color': 'green'
+        } 
     ]"
+    gauge-arrow-width="3"
+    gauge-arrow-color="blue"
     >
     <!-- <canvas id="myCanvas" width="578" height="250"></canvas> -->
   </div>
