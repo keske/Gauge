@@ -31,18 +31,34 @@ $.fn.gauge = (function() {
     // Arrow
     DEFAULT_ARROW_WIDTH = 3,
     DEFAULT_ARROW_COLOR = '#1e98e4',
-    DEFAULT_ARROW_CIRCLE_RADIUS = 7;
+    DEFAULT_ARROW_CIRCLE_RADIUS = 7,
+
+    // Tick text
+    DEFAULT_TICK_TEXT_COLOR = '#444',
+    DEFAULT_TICK_TEXT_SIZE = '12',
+    DEFAULT_TICK_TEXT_FONT = 'Serif';
 
   var draw = function($elem) {
 
+    /**
+     * Insert canvas into object
+     */
     var _createCanvas = function() {
       $('.gauge').html('<canvas id="myCanvas" width="' + DEFAULT_CANVAS_WIDTH + '" height="' + DEFAULT_CANVAS_HEIGHT + '"></canvas>');
     };
 
+    /**
+     * Get attribute
+     *
+     * @return {String} The element attr
+     */
     var _getAttr = function(attribute) {
       return $elem.attr('gauge-' + attribute);
     };
 
+    /**
+     * Draw arc
+     */
     var _drawArc = function() {
       var
         canvas = document.getElementById('myCanvas'),
@@ -87,6 +103,9 @@ $.fn.gauge = (function() {
       context.stroke();
     };
 
+    /**
+     * Draw arrow
+     */
     var _drawArrow = function() {
       var
         canvas = document.getElementById('myCanvas'),
@@ -172,11 +191,20 @@ $.fn.gauge = (function() {
       context.fill();
     };
 
+    /**
+     * Degrees to radians
+     *
+     * @param {Integer} Degrees
+     * @return {Float} Radians
+     */
     var _degToRad = function(degrees) {
       return degrees * (Math.PI / 180);
     }
 
-    var _drawFace = function() {
+    /**
+     * Draw ticks
+     */
+    var _drawTicks = function() {
       var
         canvas = document.getElementById('myCanvas'),
         context = canvas.getContext('2d'),
@@ -188,24 +216,33 @@ $.fn.gauge = (function() {
         // Color
         tickColor = _getAttr('tick-color'),
         // Radius
-        radius = _getAttr('radius'),
+        radius = +_getAttr('radius'),
 
         tickValue = 0,
         tickRadius = 0,
 
-        //
+        // Data for tick positions
         onArchX = 0,
         onArchY = 0,
         innerTickX = 0,
         innerTickY = 0,
-
         tickStartX = 0,
         tickStartY = 0,
-
         tickEndX = 0,
         tickEndY = 0,
 
-        tickNum = 0; // get min
+        // Tick text num. TODO: from min attr
+        tickNum = 0,
+
+        // Tick text render X and Y positions
+        tickTextX = 0,
+        tickTextY = 0,
+        // Tick text color...
+        tickTextColor = _getAttr('tick-text-color') || DEFAULT_TICK_TEXT_COLOR,
+        // ...font size...
+        tickTextSize = _getAttr('tick-text-size') || DEFAULT_TICK_TEXT_SIZE,
+        // ...and font name
+        tickTextFont = _getAttr('tick-text-font') || DEFAULT_TICK_TEXT_FONT;
 
       // TODO: inner and outer style
       // now not working...
@@ -218,18 +255,19 @@ $.fn.gauge = (function() {
       for (var i = -55; i < 235; i += 48) {
         tickRadius = _degToRad(i);
 
-        onArchX = 75 - (Math.cos(tickRadius) * tickValue);
-        onArchY = 75 - (Math.sin(tickRadius) * tickValue);
+        onArchX = radius - (Math.cos(tickRadius) * tickValue);
+        onArchY = radius - (Math.sin(tickRadius) * tickValue);
 
-        innerTickX = 75 - (Math.cos(tickRadius) * 75);
-        innerTickY = 75 - (Math.sin(tickRadius) * 75);
+        innerTickX = radius - (Math.cos(tickRadius) * radius);
+        innerTickY = radius - (Math.sin(tickRadius) * radius);
 
-        tickStartX = (canvas.width / 2 - 75) + onArchX;
-        tickStartY = (canvas.height / 2 - 75) + onArchY;
+        tickStartX = (canvas.width / 2 - radius) + onArchX;
+        tickStartY = (canvas.height / 2 - radius) + onArchY;
 
-        tickEndX = (canvas.width / 2 - 75) + innerTickX;
-        tickEndY = (canvas.height / 2 - 75) + innerTickY;
+        tickEndX = (canvas.width / 2 - radius) + innerTickX;
+        tickEndY = (canvas.height / 2 - radius) + innerTickY;
 
+        // Render tick
         context.beginPath();
         context.strokeStyle = tickColor;
         context.moveTo(tickStartX, tickStartY);
@@ -238,15 +276,14 @@ $.fn.gauge = (function() {
         context.closePath();
 
         // Draw ticks num text
-        context.font = '12px serif';
-        context.fillStyle = 'black';
-        // context.fillText("1", onArchX + canvas.width / 2, onArchY + canvas.height / 2);
-        
-        // Refactoring:
-        var tickTextX = (canvas.width / 2 - 78) + (75 - (Math.cos(tickRadius) * 95));
-        var tickTextY = (canvas.height / 2 - 72) + (75 - (Math.sin(tickRadius) * 95));
+        context.font = tickTextSize + 'px ' + tickTextFont;
+        context.fillStyle = tickTextColor;
 
-        // context.moveTo(tickStartX, tickStartY);
+        // Tick text X and Y pos
+        tickTextX = (canvas.width / 2 - (radius + 3)) + (radius - (Math.cos(tickRadius) * 95));
+        tickTextY = (canvas.height / 2 - (radius - 3)) + (radius - (Math.sin(tickRadius) * 95));
+
+        // Render text
         context.fillText(tickNum, tickTextX, tickTextY);
         tickNum += 1;
       }
@@ -255,7 +292,7 @@ $.fn.gauge = (function() {
     _createCanvas();
     _drawArc();
     _drawArrow();
-    _drawFace();
+    _drawTicks();
   };
 
   $(window).load(function() {
