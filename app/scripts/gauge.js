@@ -15,7 +15,7 @@ $.fn.gauge = (function() {
     // Arc
     DEFAULT_RADIUS = 75,
     DEFAULT_ANGLE_START = 0.7,
-    DEFAULT_ANGLE_END = 0.7,
+    DEFAULT_ANGLE_END = 2.3,
     DEFAULT_LINE_WIDTH = 2,
     DEFAULT_SECTORS = [{
       'limitTo': 1.9,
@@ -56,8 +56,8 @@ $.fn.gauge = (function() {
       if (window.devicePixelRatio > 1) {
         canvas.width = DEFAULT_CANVAS_WIDTH;
         canvas.height = DEFAULT_CANVAS_HEIGHT;
-        canvas.style.width = DEFAULT_CANVAS_WIDTH / 2 + "px";
-        canvas.style.height = DEFAULT_CANVAS_HEIGHT / 2 + "px";
+        canvas.style.width = DEFAULT_CANVAS_WIDTH / 2 + 'px';
+        canvas.style.height = DEFAULT_CANVAS_HEIGHT / 2 + 'px';
       }
     };
 
@@ -158,24 +158,24 @@ $.fn.gauge = (function() {
         step = 0,
 
         // Fix arrow position
-        multiplier = 0,
+        // multiplier = 0,
 
         // Step for fixing position
-        multiplierStep = 0,
+        // multiplierStep = 0,
 
         newValue = 0;
 
-      multiplier = (parseFloat(_getAttr('startAngle')).toFixed(2) * 10) - 5;
+      // multiplier = (parseFloat(_getAttr('startAngle')).toFixed(2) * 10) - 5;
 
       // Fix position...
       // Yeah, it's looks not cool, for MVP it's ok
-      if (value < (max / 2) - 1) {
-        value = value + (multiplierStep * multiplier);
-      } else if (value > (max / 2) + 1) {
-        value = value - (multiplierStep * multiplier);
-      } else if (value === max / 2) {
-        value = +_getAttr('value');
-      }
+      // if (value < (max / 2) - 1) {
+      //   value = value + (multiplierStep * multiplier);
+      // } else if (value > (max / 2) + 1) {
+      //   value = value - (multiplierStep * multiplier);
+      // } else if (value === max / 2) {
+      //   value = +_getAttr('value');
+      // }
 
       // Data for rendering
       newValue = max / value;
@@ -217,7 +217,7 @@ $.fn.gauge = (function() {
      */
     var _degToRad = function(degrees) {
       return degrees * (Math.PI / 180);
-    }
+    };
 
     /**
      * Draw ticks
@@ -235,6 +235,9 @@ $.fn.gauge = (function() {
         tickColor = _getAttr('tick-color'),
         // Radius
         radius = +_getAttr('radius'),
+
+        max = +_getAttr('max'),
+        step = +_getAttr('step'),
 
         tickValue = 0,
         tickRadius = 0,
@@ -270,7 +273,7 @@ $.fn.gauge = (function() {
         tickValue = radius + tickSize;
       }
 
-      for (var i = -54; i < 235; i += 48) {
+      for (var i = -54; i < 235; i += (287 * step / max)) {
         tickRadius = _degToRad(i);
 
         onArchX = radius - (Math.cos(tickRadius) * tickValue);
@@ -323,11 +326,11 @@ $.fn.gauge = (function() {
         clearTimeout(timer);
         gaugeWatch();
       }, 100);
-    }
+    };
 
     $('.gauge').each(function() {
       draw($(this));
-      gaugeWatch();
+      // gaugeWatch();
     });
   });
 

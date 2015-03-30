@@ -1,7 +1,22 @@
 {
   "name": "gauge",
-  "private": true,
   "dependencies": {
     "jquery": "~2.1.1"
-  }
+  },
+  "version": "0.0.1",
+  "homepage": "https://github.com/keske/Gauge",
+  "authors": [
+    "Andrey Keske <hello@andreykeske.com>"
+  ],
+  "description": "Gauge element",
+  "main": "dist/scripts/gauge.min.js",
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals"
+  ],
+  "keywords": [
+    "gauge"
+  ],
+  "license": "MIT"
 }

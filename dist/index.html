@@ -1,0 +1,11 @@
+<!doctype html> <html> <head> <meta charset=utf-8> <meta name=description> <meta name=viewport content="width=device-width, initial-scale=1"> <title> Gauge </title>  <link rel=stylesheet href=styles/gauge.min.css> </head> <body> <div class=gauge gauge-value=2 gauge-min=0 gauge-max=6 gauge-step=1 gauge-radius=175 gauge-linewidth=2 gauge-sectors="[ { 'limitTo': 1.9, 'color': '#666666' }, { 'limitTo': 2.2, 'color': '#ffa500' }, { 'limitTo': 2.3, 'color': '#ff0000' } ]" gauge-arrow-width=3 gauge-arrow-color=#1e98e4 gauge-arrow-circle-radius=7 gauge-tick-inner=false gauge-tick-color=#666666 gauge-tick-size=8 gauge-tick-text-color=black gauge-tick-text-size=24 gauge-tick-text-font=serif> <div class=arrow></div> <div class=tick></div> </div> <button class=random> Random </button> <script src=scripts/vendor.js></script> <script src=scripts/gauge.min.js></script>  <script type=text/javascript>
+    // Random
+    function getRandom(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    // Click event
+    $('.random').on('click', function() {
+        $('.gauge').attr('gauge-value', getRandom(0, 6));
+    });
+  </script> </body> </html> 
