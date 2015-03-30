@@ -157,25 +157,7 @@ $.fn.gauge = (function() {
         max = +_getAttr('max') || DEFAULT_MAX,
         step = 0,
 
-        // Fix arrow position
-        // multiplier = 0,
-
-        // Step for fixing position
-        // multiplierStep = 0,
-
         newValue = 0;
-
-      // multiplier = (parseFloat(_getAttr('startAngle')).toFixed(2) * 10) - 5;
-
-      // Fix position...
-      // Yeah, it's looks not cool, for MVP it's ok
-      // if (value < (max / 2) - 1) {
-      //   value = value + (multiplierStep * multiplier);
-      // } else if (value > (max / 2) + 1) {
-      //   value = value - (multiplierStep * multiplier);
-      // } else if (value === max / 2) {
-      //   value = +_getAttr('value');
-      // }
 
       // Data for rendering
       newValue = max / value;
@@ -189,7 +171,9 @@ $.fn.gauge = (function() {
       context.beginPath();
       context.translate(canvas.width / 2, canvas.height / 2);
 
-      // Rotate arrow
+      var step_ = 0.160 * +_getAttr('step');
+      angle = ((10 / max * step_) * value / _getAttr('step')) + 0.20;
+
       context.rotate(angle * Math.PI);
 
       // Draw figure
@@ -235,6 +219,8 @@ $.fn.gauge = (function() {
         tickColor = _getAttr('tick-color'),
         // Radius
         radius = +_getAttr('radius'),
+        // Step
+        step = +_getAttr('step'),
 
         max = +_getAttr('max'),
         step = +_getAttr('step'),
@@ -306,7 +292,7 @@ $.fn.gauge = (function() {
 
         // Render text
         context.fillText(tickNum, tickTextX, tickTextY);
-        tickNum += 1;
+        tickNum += step;
       }
     };
 
