@@ -48,6 +48,20 @@ $.fn.gauge = (function() {
     };
 
     /**
+     * Retina canvas resize
+     *
+     * @param {Object} Canvas
+     */
+    var _ratinaScreenReSize = function(canvas) {
+      if (window.devicePixelRatio > 1) {
+        canvas.width = DEFAULT_CANVAS_WIDTH;
+        canvas.height = DEFAULT_CANVAS_HEIGHT;
+        canvas.style.width = DEFAULT_CANVAS_WIDTH / 2 + "px";
+        canvas.style.height = DEFAULT_CANVAS_HEIGHT / 2 + "px";;
+      }
+    };
+
+    /**
      * Get attribute
      *
      * @return {String} The element attr
@@ -78,6 +92,10 @@ $.fn.gauge = (function() {
 
         // Atribute params to JSON. Default: `DEFAULT_SECTORS`
         sectors = eval(_getAttr('sectors')) || DEFAULT_SECTORS;
+      
+      // First thing before rendering
+      // we should to know is high DPI screen or not
+      _ratinaScreenReSize(canvas);
 
       // Draw arc
       // Set line width. Default: `DEFAULT_LINE_WIDTH`
