@@ -67,6 +67,7 @@ $.fn.gauge = (function() {
       // Set line width. Default: `DEFAULT_LINE_WIDTH`
       context.lineWidth = _getAttr('lineWidth') || DEFAULT_LINE_WIDTH;
 
+      // TODO: sector.length
       // First sector
       context.beginPath();
       context.arc(x, y, radius, startAngle, sectors[0].limitTo * Math.PI, counterClockwise);
@@ -202,14 +203,16 @@ $.fn.gauge = (function() {
         tickStartY = 0,
 
         tickEndX = 0,
-        tickEndY = 0;
+        tickEndY = 0,
+
+        tickNum = 0; // get min
 
       // TODO: inner and outer style
       // now not working...
       if (tickInner) {
-        tickValue = radius - 10;
+        tickValue = radius - tickSize;
       } else {
-        tickValue = radius + 10;
+        tickValue = radius + tickSize;
       }
 
       for (var i = -55; i < 235; i += 48) {
@@ -233,6 +236,19 @@ $.fn.gauge = (function() {
         context.lineTo(tickEndX, tickEndY);
         context.stroke();
         context.closePath();
+
+        // Draw ticks num text
+        context.font = '12px serif';
+        context.fillStyle = 'black';
+        // context.fillText("1", onArchX + canvas.width / 2, onArchY + canvas.height / 2);
+        
+        // Refactoring:
+        var tickTextX = (canvas.width / 2 - 78) + (75 - (Math.cos(tickRadius) * 95));
+        var tickTextY = (canvas.height / 2 - 72) + (75 - (Math.sin(tickRadius) * 95));
+
+        // context.moveTo(tickStartX, tickStartY);
+        context.fillText(tickNum, tickTextX, tickTextY);
+        tickNum += 1;
       }
     };
 

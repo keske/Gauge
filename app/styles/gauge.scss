@@ -1,2 +1,15 @@
 // bower:scss
 // endbower
+
+.gauge {
+
+  .arrow {
+    width: 7px;
+    display: none;
+    color: red;
+  }
+
+  .tick {
+    display: none;
+  }
+}
