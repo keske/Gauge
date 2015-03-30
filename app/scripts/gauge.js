@@ -4,8 +4,8 @@ $.fn.gauge = (function() {
   'use strict';
 
   var // Canvas size
-    DEFAULT_CANVAS_WIDTH = 580,
-    DEFAULT_CANVAS_HEIGHT = 250,
+    DEFAULT_CANVAS_WIDTH = 1060,
+    DEFAULT_CANVAS_HEIGHT = 500,
 
     // Values
     // DEFAULT_MIN = 0,
@@ -57,7 +57,7 @@ $.fn.gauge = (function() {
         canvas.width = DEFAULT_CANVAS_WIDTH;
         canvas.height = DEFAULT_CANVAS_HEIGHT;
         canvas.style.width = DEFAULT_CANVAS_WIDTH / 2 + "px";
-        canvas.style.height = DEFAULT_CANVAS_HEIGHT / 2 + "px";;
+        canvas.style.height = DEFAULT_CANVAS_HEIGHT / 2 + "px";
       }
     };
 
@@ -92,7 +92,7 @@ $.fn.gauge = (function() {
 
         // Atribute params to JSON. Default: `DEFAULT_SECTORS`
         sectors = eval(_getAttr('sectors')) || DEFAULT_SECTORS;
-      
+
       // First thing before rendering
       // we should to know is high DPI screen or not
       _ratinaScreenReSize(canvas);
@@ -270,7 +270,7 @@ $.fn.gauge = (function() {
         tickValue = radius + tickSize;
       }
 
-      for (var i = -55; i < 235; i += 48) {
+      for (var i = -54; i < 235; i += 48) {
         tickRadius = _degToRad(i);
 
         onArchX = radius - (Math.cos(tickRadius) * tickValue);
@@ -298,8 +298,8 @@ $.fn.gauge = (function() {
         context.fillStyle = tickTextColor;
 
         // Tick text X and Y pos
-        tickTextX = (canvas.width / 2 - (radius + 3)) + (radius - (Math.cos(tickRadius) * 95));
-        tickTextY = (canvas.height / 2 - (radius - 3)) + (radius - (Math.sin(tickRadius) * 95));
+        tickTextX = (canvas.width / 2 - (radius + 3)) + (radius - (Math.cos(tickRadius) * (radius + 20)));
+        tickTextY = (canvas.height / 2 - (radius - 3)) + (radius - (Math.sin(tickRadius) * (radius + 20)));
 
         // Render text
         context.fillText(tickNum, tickTextX, tickTextY);
@@ -314,8 +314,20 @@ $.fn.gauge = (function() {
   };
 
   $(window).load(function() {
+    var timer;
+    var gaugeWatch = function() {
+      timer = setTimeout(function() {
+        $('.gauge').each(function() {
+          draw($(this));
+        });
+        clearTimeout(timer);
+        gaugeWatch();
+      }, 100);
+    }
+
     $('.gauge').each(function() {
       draw($(this));
+      gaugeWatch();
     });
   });
 

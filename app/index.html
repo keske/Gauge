@@ -23,11 +23,11 @@
   <body>
   
   <div class="gauge"
-    gauge-value="4" 
+    gauge-value="0" 
     gauge-min="0" 
     gauge-max="6" 
     gauge-step="1" 
-    gauge-radius="75" 
+    gauge-radius="175" 
     gauge-lineWidth="2" 
     gauge-startAngle="0.7" 
     gauge-endAngle="2.3" 
@@ -50,14 +50,16 @@
     gauge-tick-color="#666666"
     gauge-tick-size="8"
     gauge-tick-text-color="black"
-    gauge-tick-text-size="12"
+    gauge-tick-text-size="24"
     gauge-tick-text-font="serif"
     >
     <div class="arrow"></div>
     <div class="tick"></div>
   </div>
 
-  <!-- <div class="gauge"></div> -->
+  <button class="random">
+      Random
+  </button>
 
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->
@@ -68,6 +70,19 @@
         <!-- build:js scripts/gauge.min.js -->
         <script src="scripts/gauge.js"></script>
         <!-- endbuild -->
+  
+  <!-- just for example -->
+  <script type="text/javascript">
+    // Random
+    function getRandom(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    // Click event
+    $('.random').on('click', function() {
+        $('.gauge').attr('gauge-value', getRandom(0, 6));
+    });
+  </script>
 
 </body>
 </html>
