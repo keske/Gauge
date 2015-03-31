@@ -4,7 +4,7 @@
   "description": "Some gauge.",
   "main": "gauge.js",
   "scripts": {
-    "test": "console,log('test')"
+    "test": "console,log('Hello gauge!')"
   },
   "repository": {
     "type": "git",
@@ -19,7 +19,7 @@
     "url": "https://github.com/keske/Gauge/issues"
   },
   "homepage": "https://github.com/keske/Gauge",
-  "private": true,
+  "private": false,
   "engines": {
     "node": ">=0.10.0"
   },

@@ -1,1 +1,1 @@
-.gauge .arrow{width:7px;display:none;color:red}.gauge .tick{display:none}
+.gauge{width:1000px;height:500px;font-size:22px;font-family:Serif;color:#000}.gauge .sector{display:none}.gauge .sector:nth-child(1){background-color:#666}.gauge .sector:nth-child(2){background-color:#ffa500}.gauge .sector:nth-child(3){background-color:red}.gauge .arrow{width:7px;background:#1e98e4;display:none}.gauge .arrow .arrow-circle{width:13px;background:#1e98e4}.gauge .tick{color:#666;height:18px;display:none}
