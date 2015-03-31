@@ -36,8 +36,12 @@ $.fn.gauge = (function() {
    * Append elements into the object
    */
   var _createGaugeElements = function($elem) {
+    var
+      canvasWidth = $elem.css('width').replace('px', '') || DEFAULT_CANVAS_WIDTH,
+      canvasHeight = $elem.css('height').replace('px', '') || DEFAULT_CANVAS_HEIGHT;
+
     // Canvas...
-    $elem.append('<canvas id="myCanvas" width="' + DEFAULT_CANVAS_WIDTH + '" height="' + DEFAULT_CANVAS_HEIGHT + '"></canvas>');
+    $elem.append('<canvas id="myCanvas" width="' + canvasWidth + '" height="' + canvasHeight + '"></canvas>');
     // ...arrow...
     $elem.append('<div class="arrow"><div class="arrow-circle"></div></div>');
     // ...ticks
@@ -52,11 +56,17 @@ $.fn.gauge = (function() {
      * @param {Object} Canvas
      */
     var _ratinaScreenReSize = function(canvas) {
+      var
+        canvasWidth = $elem.css('width').replace('px', '') || DEFAULT_CANVAS_WIDTH,
+        canvasHeight = $elem.css('height').replace('px', '') || DEFAULT_CANVAS_HEIGHT;
+        // context = canvas.getContext('2d');
+
       if (window.devicePixelRatio > 1) {
-        canvas.width = DEFAULT_CANVAS_WIDTH;
-        canvas.height = DEFAULT_CANVAS_HEIGHT;
-        canvas.style.width = DEFAULT_CANVAS_WIDTH / 2 + 'px';
-        canvas.style.height = DEFAULT_CANVAS_HEIGHT / 2 + 'px';
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+        canvas.style.width = canvasWidth / 2 + 'px';
+        canvas.style.height = canvasHeight / 2 + 'px';
+        // context.translate(canvasWidth, canvasWidth);
       }
     };
 
