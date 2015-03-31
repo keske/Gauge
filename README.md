@@ -34,7 +34,7 @@ Element:
     gauge-radius="175" 
     gauge-lineWidth="2"
     >
-    <div class="sector" sector-width="1.3">1</div>
+    <div class="sector" sector-width="1.3"></div>
     <div class="sector" sector-width="2.1"></div>
     <div class="sector" sector-width="2.3"></div>
   </div>
