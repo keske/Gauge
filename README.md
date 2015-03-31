@@ -34,7 +34,7 @@ Element:
     gauge-radius="175" 
     gauge-lineWidth="2"
     >
-    <div class="sector" sector-width="1.3"></div>
+    <div class="sector" sector-width="1.3">1</div>
     <div class="sector" sector-width="2.1"></div>
     <div class="sector" sector-width="2.3"></div>
   </div>
@@ -54,4 +54,8 @@ $ gulp server
 ```
 $ gulp
 ```
+
+## Tested on
+
+OS X: Chrome 41.0.2272.104 (64-bit), Opera 27.0.1689.76, FireFox 36.0.4, Safari 8.0.4
 
