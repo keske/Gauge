@@ -33,18 +33,27 @@ $.fn.gauge = (function() {
     DEFAULT_ARROW_COLOR = '#1e98e4',
     DEFAULT_ARROW_CIRCLE_RADIUS = 7,
 
+    // Tick
+    DEFAULT_TICK_COLOR = '#666',
+    DEFAULT_TICK_HEIGHT = '18',
+
     // Tick text
     DEFAULT_TICK_TEXT_COLOR = '#444',
     DEFAULT_TICK_TEXT_SIZE = '12',
-    DEFAULT_TICK_TEXT_FONT = 'Serif';
+    DEFAULT_TICK_TEXT_FONT = 'Arial';
 
   var draw = function($elem) {
 
     /**
      * Insert canvas into object
      */
-    var _createCanvas = function() {
-      $('.gauge').html('<canvas id="myCanvas" width="' + DEFAULT_CANVAS_WIDTH + '" height="' + DEFAULT_CANVAS_HEIGHT + '"></canvas>');
+    var _createGaugeElements = function() {
+      // Canvas...
+      $('.gauge').append('<canvas id="myCanvas" width="' + DEFAULT_CANVAS_WIDTH + '" height="' + DEFAULT_CANVAS_HEIGHT + '"></canvas>');
+      // ...arrow...
+      $('.gauge').append('<div class="arrow"><div class="arrow-circle"></div></div>');
+      // ...ticks
+      $('.gauge').append('<div class="tick"></div>');
     };
 
     /**
@@ -91,7 +100,21 @@ $.fn.gauge = (function() {
         counterClockwise = false,
 
         // Atribute params to JSON. Default: `DEFAULT_SECTORS`
-        sectors = eval(_getAttr('sectors')) || DEFAULT_SECTORS;
+        sectors = eval(_getAttr('sectors')) || DEFAULT_SECTORS,
+
+        // Sector background color array
+        sectorBackgroundColor = [
+          $('.gauge .sector:nth-child(1)').css('background-color'),
+          $('.gauge .sector:nth-child(2)').css('background-color'),
+          $('.gauge .sector:nth-child(3)').css('background-color'),
+        ],
+
+        // Sector width
+        sectorWidth = [
+          $('.gauge .sector:nth-child(1)').attr('sector-width'),
+          $('.gauge .sector:nth-child(2)').attr('sector-width'),
+          $('.gauge .sector:nth-child(3)').attr('sector-width'),
+        ];
 
       // First thing before rendering
       // we should to know is high DPI screen or not
@@ -104,20 +127,20 @@ $.fn.gauge = (function() {
       // TODO: sector.length
       // First sector
       context.beginPath();
-      context.arc(x, y, radius, startAngle, sectors[0].limitTo * Math.PI, counterClockwise);
-      context.strokeStyle = sectors[0].color;
+      context.arc(x, y, radius, startAngle, sectorWidth[0] * Math.PI, counterClockwise);
+      context.strokeStyle = sectorBackgroundColor[0];
       context.stroke();
 
       // Second
       context.beginPath();
-      context.arc(x, y, radius, sectors[0].limitTo * Math.PI, sectors[1].limitTo * Math.PI, counterClockwise);
-      context.strokeStyle = sectors[1].color;
+      context.arc(x, y, radius, sectorWidth[0] * Math.PI, sectorWidth[1] * Math.PI, counterClockwise);
+      context.strokeStyle = sectorBackgroundColor[1];
       context.stroke();
 
       // Third sector
       context.beginPath();
-      context.arc(x, y, radius, sectors[1].limitTo * Math.PI, endAngle, counterClockwise);
-      context.strokeStyle = sectors[2].color;
+      context.arc(x, y, radius, sectorWidth[1] * Math.PI, endAngle, counterClockwise);
+      context.strokeStyle = sectorBackgroundColor[2];
       context.stroke();
     };
 
@@ -125,21 +148,25 @@ $.fn.gauge = (function() {
      * Draw arrow
      */
     var _drawArrow = function() {
+
       var
         canvas = document.getElementById('myCanvas'),
         context = canvas.getContext('2d'),
 
         // Get arrow width from attribute. Default: `DEFAULT_ARROW_WIDTH`
-        arrowWidth = _getAttr('arrow-width') || DEFAULT_ARROW_WIDTH,
+        arrowWidth = $('.gauge .arrow').css('width').replace('px', '') || DEFAULT_ARROW_WIDTH,
 
         // Get arrow width from attribute. Default: `DEFAULT_ARROW_COLOR`
-        arrowColor = _getAttr('arrow-color') || DEFAULT_ARROW_COLOR,
+        arrowColor = $('.gauge .arrow').css('background-color') || DEFAULT_ARROW_COLOR,
 
         // Get radius. Default: `DEFAULT_RADIUS`
         radius = _getAttr('radius') || DEFAULT_RADIUS,
 
         // Circle radius. Default: `DEFAULT_ARROW_CIRCLE_RADIUS`
-        circleRadius = _getAttr('arrow-circle-radius') || DEFAULT_ARROW_CIRCLE_RADIUS,
+        circleRadius = $('.gauge .arrow-circle').css('width').replace('px', '') || DEFAULT_ARROW_CIRCLE_RADIUS,
+
+        // Circle color
+        circleBackgroudColor = $('.gauge .arrow .arrow-circle').css('background-color') || DEFAULT_ARROW_COLOR,
 
         // Current position
         angle = 0,
@@ -189,7 +216,7 @@ $.fn.gauge = (function() {
       // Create circle
       context.beginPath();
       context.arc(canvas.width / 2, canvas.height / 2, circleRadius, 0, 2 * Math.PI, false);
-      context.fillStyle = arrowColor;
+      context.fillStyle = circleBackgroudColor;
       context.fill();
     };
 
@@ -214,9 +241,9 @@ $.fn.gauge = (function() {
         // Tick inner or outter style
         tickInner = _getAttr('tick-inner'),
         // Tick size
-        tickSize = _getAttr('tick-size'),
+        tickSize = $('.gauge .tick').css('height').replace('px', '') || DEFAULT_TICK_HEIGHT,
         // Color
-        tickColor = _getAttr('tick-color'),
+        tickColor = $('.gauge .tick').css('color') || DEFAULT_TICK_COLOR,
         // Radius
         radius = +_getAttr('radius'),
         // Step
@@ -245,11 +272,12 @@ $.fn.gauge = (function() {
         tickTextX = 0,
         tickTextY = 0,
         // Tick text color...
-        tickTextColor = _getAttr('tick-text-color') || DEFAULT_TICK_TEXT_COLOR,
+        tickTextColor = $('.gauge').css('color') || DEFAULT_TICK_TEXT_COLOR,
         // ...font size...
-        tickTextSize = _getAttr('tick-text-size') || DEFAULT_TICK_TEXT_SIZE,
+
+        tickTextSize = $('.gauge').css('font-size') || DEFAULT_TICK_TEXT_SIZE,
         // ...and font name
-        tickTextFont = _getAttr('tick-text-font') || DEFAULT_TICK_TEXT_FONT;
+        tickTextFont = $('.gauge').css('font-family') || DEFAULT_TICK_TEXT_FONT;
 
       // TODO: inner and outer style
       // now not working...
@@ -283,7 +311,7 @@ $.fn.gauge = (function() {
         context.closePath();
 
         // Draw ticks num text
-        context.font = tickTextSize + 'px ' + tickTextFont;
+        context.font = tickTextSize + ' ' + tickTextFont;
         context.fillStyle = tickTextColor;
 
         // Tick text X and Y pos
@@ -296,7 +324,7 @@ $.fn.gauge = (function() {
       }
     };
 
-    _createCanvas();
+    _createGaugeElements();
     _drawArc();
     _drawArrow();
     _drawTicks();

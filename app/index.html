@@ -23,36 +23,18 @@
   <body>
   
   <div class="gauge"
-    gauge-value="63" 
+    gauge-value="13" 
     gauge-min="0" 
     gauge-max="100" 
     gauge-step="10" 
     gauge-radius="175" 
-    gauge-lineWidth="2"  
-    gauge-sectors="[
-        {
-            'limitTo': 1.9,
-            'color': '#666666'
-        }, {
-            'limitTo': 2.2,
-            'color': '#ffa500'
-        }, {
-            'limitTo': 2.3,
-            'color': '#ff0000'
-        } 
-    ]"
-    gauge-arrow-width="3"
-    gauge-arrow-color="#1e98e4"
-    gauge-arrow-circle-radius="7"
+    gauge-lineWidth="2"
     gauge-tick-inner="false"
-    gauge-tick-color="#666666"
-    gauge-tick-size="8"
-    gauge-tick-text-color="black"
-    gauge-tick-text-size="24"
-    gauge-tick-text-font="serif"
     >
-    <div class="arrow"></div>
-    <div class="tick"></div>
+    <!-- set sectors width, now only three sectors supports -->
+    <div class="sector" sector-width="1.3">1</div>
+    <div class="sector" sector-width="2.1"></div>
+    <div class="sector" sector-width="2.3"></div>
   </div>
 
   <button class="random">

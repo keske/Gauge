@@ -2,14 +2,38 @@
 // endbower
 
 .gauge {
+  font-size: 22px;
+  font-family: Serif;
+  color: black;
+
+  .sector {
+    display: none;
+
+    &:nth-child(1) {
+      background-color: #666666;
+    }
+    &:nth-child(2) {
+      background-color: #ffa500;
+    }
+    &:nth-child(3) {
+      background-color: #ff0000;
+    }
+  }
 
   .arrow {
     width: 7px;
+    background: #1e98e4;
     display: none;
-    color: red;
+
+    .arrow-circle {
+      width: 13px;
+      background: #1e98e4;
+    }
   }
 
   .tick {
+    color: #666;
+    height: 18px;
     display: none;
   }
 }
