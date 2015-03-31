@@ -17,16 +17,6 @@ $.fn.gauge = (function() {
     DEFAULT_ANGLE_START = 0.7,
     DEFAULT_ANGLE_END = 2.3,
     DEFAULT_LINE_WIDTH = 2,
-    DEFAULT_SECTORS = [{
-      'limitTo': 1.9,
-      'color': '#666666'
-    }, {
-      'limitTo': 2.2,
-      'color': '#ffa500'
-    }, {
-      'limitTo': 2.3,
-      'color': '#ff0000'
-    }],
 
     // Arrow
     DEFAULT_ARROW_WIDTH = 3,
@@ -42,19 +32,19 @@ $.fn.gauge = (function() {
     DEFAULT_TICK_TEXT_SIZE = '12',
     DEFAULT_TICK_TEXT_FONT = 'Arial';
 
-  var draw = function($elem) {
+  /**
+   * Append elements into the object
+   */
+  var _createGaugeElements = function($elem) {
+    // Canvas...
+    $elem.append('<canvas id="myCanvas" width="' + DEFAULT_CANVAS_WIDTH + '" height="' + DEFAULT_CANVAS_HEIGHT + '"></canvas>');
+    // ...arrow...
+    $elem.append('<div class="arrow"><div class="arrow-circle"></div></div>');
+    // ...ticks
+    $elem.append('<div class="tick"></div>');
+  };
 
-    /**
-     * Insert canvas into object
-     */
-    var _createGaugeElements = function() {
-      // Canvas...
-      $('.gauge').append('<canvas id="myCanvas" width="' + DEFAULT_CANVAS_WIDTH + '" height="' + DEFAULT_CANVAS_HEIGHT + '"></canvas>');
-      // ...arrow...
-      $('.gauge').append('<div class="arrow"><div class="arrow-circle"></div></div>');
-      // ...ticks
-      $('.gauge').append('<div class="tick"></div>');
-    };
+  var draw = function($elem) {
 
     /**
      * Retina canvas resize
@@ -99,10 +89,8 @@ $.fn.gauge = (function() {
 
         counterClockwise = false,
 
-        // Atribute params to JSON. Default: `DEFAULT_SECTORS`
-        sectors = eval(_getAttr('sectors')) || DEFAULT_SECTORS,
-
         // Sector background color array
+        // TODO: refactoring
         sectorBackgroundColor = [
           $('.gauge .sector:nth-child(1)').css('background-color'),
           $('.gauge .sector:nth-child(2)').css('background-color'),
@@ -110,6 +98,7 @@ $.fn.gauge = (function() {
         ],
 
         // Sector width
+        // TODO: refactoring
         sectorWidth = [
           $('.gauge .sector:nth-child(1)').attr('sector-width'),
           $('.gauge .sector:nth-child(2)').attr('sector-width'),
@@ -124,7 +113,7 @@ $.fn.gauge = (function() {
       // Set line width. Default: `DEFAULT_LINE_WIDTH`
       context.lineWidth = _getAttr('lineWidth') || DEFAULT_LINE_WIDTH;
 
-      // TODO: sector.length
+      // TODO: sector.length refactoring
       // First sector
       context.beginPath();
       context.arc(x, y, radius, startAngle, sectorWidth[0] * Math.PI, counterClockwise);
@@ -248,9 +237,7 @@ $.fn.gauge = (function() {
         radius = +_getAttr('radius'),
         // Step
         step = +_getAttr('step'),
-
         max = +_getAttr('max'),
-        step = +_getAttr('step'),
 
         tickValue = 0,
         tickRadius = 0,
@@ -315,8 +302,8 @@ $.fn.gauge = (function() {
         context.fillStyle = tickTextColor;
 
         // Tick text X and Y pos
-        tickTextX = (canvas.width / 2 - (radius + 3)) + (radius - (Math.cos(tickRadius) * (radius + 20)));
-        tickTextY = (canvas.height / 2 - (radius - 3)) + (radius - (Math.sin(tickRadius) * (radius + 20)));
+        tickTextX = (canvas.width / 2 - (radius + 10)) + (radius - (Math.cos(tickRadius) * (radius + 20)));
+        tickTextY = (canvas.height / 2 - (radius - 10)) + (radius - (Math.sin(tickRadius) * (radius + 20)));
 
         // Render text
         context.fillText(tickNum, tickTextX, tickTextY);
@@ -324,7 +311,6 @@ $.fn.gauge = (function() {
       }
     };
 
-    _createGaugeElements();
     _drawArc();
     _drawArrow();
     _drawTicks();
@@ -343,8 +329,9 @@ $.fn.gauge = (function() {
     };
 
     $('.gauge').each(function() {
+      _createGaugeElements($(this));
       draw($(this));
-      // gaugeWatch();
+      gaugeWatch();
     });
   });
 

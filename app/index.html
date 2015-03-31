@@ -60,7 +60,10 @@
 
     // Click event
     $('.random').on('click', function() {
-        $('.gauge').attr('gauge-value', getRandom(0, 6));
+        $('.gauge').attr('gauge-value', 
+          getRandom(
+            $('.gauge').attr('gauge-min'), 
+            $('.gauge').attr('gauge-max')));
     });
   </script>
 
