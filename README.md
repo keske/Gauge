@@ -1,5 +1,9 @@
 # Gauge
 
+## Demo
+![http://andreykeske.com/projects/gauge/cover.png](http://andreykeske.com/projects/gauge/cover.png)
+[http://andreykeske.com/projects/gauge/index.html](http://andreykeske.com/projects/gauge/index.html)
+
 ## Usage
 
 ### Install package
